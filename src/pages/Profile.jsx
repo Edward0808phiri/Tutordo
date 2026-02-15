@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Profile() {
+  const navigate = useNavigate()
   const [user] = useState({
     name: 'Alex Johnson',
     email: 'alex.johnson@email.com',
@@ -92,7 +94,10 @@ function Profile() {
       </div>
 
       {/* Sign Out Button */}
-      <button className="w-full py-3 bg-red-50 text-red-600 rounded-xl font-semibold border border-red-100 active:bg-red-100 transition-colors">
+      <button 
+        onClick={() => navigate('/login')}
+        className="w-full py-3 bg-red-50 text-red-600 rounded-xl font-semibold border border-red-100 active:bg-red-100 transition-colors"
+      >
         Sign Out
       </button>
 
