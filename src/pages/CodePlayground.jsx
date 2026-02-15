@@ -95,11 +95,13 @@ console.log('JavaScript is running!');`)
   useEffect(() => {
     if (iframeRef.current && output) {
       const doc = iframeRef.current.contentDocument
-      doc.open()
-      doc.write(output)
-      doc.close()
+      if (doc) {
+        doc.open()
+        doc.write(output)
+        doc.close()
+      }
     }
-  }, [output])
+  }, [output, showConsole])
 
   const tabs = [
     { id: 'html', label: 'HTML', icon: '📄' },
