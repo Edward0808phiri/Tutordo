@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Courses from './pages/Courses'
 import CourseDetail from './pages/CourseDetail'
 import Profile from './pages/Profile'
+import CodePlayground from './pages/CodePlayground'
 import Login from './pages/Login'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="courses" element={<Courses />} />
             <Route path="courses/:courseId" element={<CourseDetail />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="playground" element={<CodePlayground />} />
           </Route>
         </Routes>
       </HashRouter>

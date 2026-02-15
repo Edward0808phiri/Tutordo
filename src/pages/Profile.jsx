@@ -105,6 +105,15 @@ function Profile() {
         ))}
       </div>
 
+      {/* Code Playground Button */}
+      <button 
+        onClick={() => navigate('/playground')}
+        className="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold flex items-center justify-center space-x-2 active:opacity-90 transition-opacity shadow-lg"
+      >
+        <span className="text-xl">💻</span>
+        <span>Code Playground</span>
+      </button>
+
       {/* Sign Out Button */}
       <button 
         onClick={handleSignOut}
