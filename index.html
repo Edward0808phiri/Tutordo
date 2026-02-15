@@ -9,6 +9,7 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
       import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+      import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
       
       const firebaseConfig = {
         apiKey: "AIzaSyDXw2y5iHfAdPT-1Nv7ofBrxh17ZJ9bXmk",
@@ -22,6 +23,7 @@
 
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
+      const db = getFirestore(app);
       const googleProvider = new GoogleAuthProvider();
 
       window.firebaseAuth = {
@@ -32,6 +34,14 @@
         createUserWithEmailAndPassword,
         signOut,
         onAuthStateChanged
+      };
+
+      window.firebaseDb = {
+        db,
+        doc,
+        getDoc,
+        setDoc,
+        updateDoc
       };
     </script>
   </head>

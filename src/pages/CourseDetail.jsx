@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { getCourseProgress, saveProgress } from '../services/progressService'
 
 // Course data with lessons
 const coursesData = {
@@ -96,10 +98,32 @@ Congratulations! You've completed the JavaScript Introduction course! 🎉`
 function CourseDetail() {
   const { courseId } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [selectedLesson, setSelectedLesson] = useState(null)
   const [completedLessons, setCompletedLessons] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const course = coursesData[courseId]
+
+  // Load progress from Firestore on mount
+  useEffect(() => {
+    const loadProgress = async () => {
+      if (user && courseId) {
+        const savedProgress = await getCourseProgress(user.uid, courseId)
+        setCompletedLessons(savedProgress)
+      }
+      setLoading(false)
+    }
+    loadProgress()
+  }, [user, courseId])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-600 border-t-transparent"></div>
+      </div>
+    )
+  }
 
   if (!course) {
     return (
@@ -115,9 +139,15 @@ function CourseDetail() {
     )
   }
 
-  const handleLessonComplete = (lessonId) => {
+  const handleLessonComplete = async (lessonId) => {
     if (!completedLessons.includes(lessonId)) {
-      setCompletedLessons([...completedLessons, lessonId])
+      const newCompletedLessons = [...completedLessons, lessonId]
+      setCompletedLessons(newCompletedLessons)
+      
+      // Save to Firestore
+      if (user) {
+        await saveProgress(user.uid, courseId, newCompletedLessons)
+      }
     }
   }
 

@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -8,6 +9,14 @@ function Login() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
+  const { user, loading } = useAuth()
+
+  // Redirect to home if already logged in
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/')
+    }
+  }, [user, loading, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -38,6 +47,15 @@ function Login() {
     } catch (err) {
       setError(err.message.replace('Firebase: ', '').replace(/\(auth\/.*\)/, ''))
     }
+  }
+
+  // Show loading while checking auth state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
+      </div>
+    )
   }
 
   return (
