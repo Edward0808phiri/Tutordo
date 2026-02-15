@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Courses() {
   const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -10,49 +12,54 @@ function Courses() {
       
       const mockCourses = [
         {
-          id: 1,
+          id: 'javascript-intro',
+          title: 'JavaScript Introduction',
+          lessons: 4,
+          duration: '45min',
+          progress: 0,
+          image: '💛',
+          color: 'from-yellow-500 to-orange-500',
+          clickable: true,
+        },
+        {
+          id: 'react-fundamentals',
           title: 'React Fundamentals',
           lessons: 12,
           duration: '3h 45min',
           progress: 40,
           image: '⚛️',
           color: 'from-blue-500 to-cyan-500',
+          clickable: false,
         },
         {
-          id: 2,
-          title: 'JavaScript Mastery',
-          lessons: 18,
-          duration: '5h 20min',
-          progress: 75,
-          image: '💛',
-          color: 'from-yellow-500 to-orange-500',
-        },
-        {
-          id: 3,
+          id: 'typescript-basics',
           title: 'TypeScript Basics',
           lessons: 10,
           duration: '2h 30min',
           progress: 0,
           image: '🔷',
           color: 'from-blue-600 to-indigo-600',
+          clickable: false,
         },
         {
-          id: 4,
+          id: 'nodejs-backend',
           title: 'Node.js Backend',
           lessons: 15,
           duration: '4h 15min',
           progress: 20,
           image: '🟩',
           color: 'from-green-500 to-emerald-500',
+          clickable: false,
         },
         {
-          id: 5,
+          id: 'css-tailwind',
           title: 'CSS & Tailwind',
           lessons: 8,
           duration: '2h 10min',
           progress: 100,
           image: '🎨',
           color: 'from-pink-500 to-purple-500',
+          clickable: false,
         },
       ]
 
@@ -109,9 +116,23 @@ function Courses() {
       {/* Course Cards */}
       <div className="space-y-4">
         {courses.map(course => (
-          <div key={course.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-            <div className={`h-24 bg-gradient-to-r ${course.color} flex items-center justify-center text-4xl`}>
+          <div 
+            key={course.id} 
+            onClick={() => course.clickable && navigate(`/courses/${course.id}`)}
+            className={`bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 ${course.clickable ? 'cursor-pointer active:bg-gray-50' : 'opacity-75'}`}
+          >
+            <div className={`h-24 bg-gradient-to-r ${course.color} flex items-center justify-center text-4xl relative`}>
               {course.image}
+              {course.clickable && (
+                <span className="absolute top-2 right-2 bg-white/20 text-white text-xs px-2 py-1 rounded-full">
+                  Available
+                </span>
+              )}
+              {!course.clickable && (
+                <span className="absolute top-2 right-2 bg-black/20 text-white text-xs px-2 py-1 rounded-full">
+                  Coming Soon
+                </span>
+              )}
             </div>
             <div className="p-4">
               <h3 className="font-bold text-gray-800 mb-1">{course.title}</h3>
