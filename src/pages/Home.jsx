@@ -79,6 +79,25 @@ function Home() {
 
   return (
     <div className="px-4 py-4 space-y-6">
+      {/* Introduction Video */}
+      <div>
+        <h3 className="text-lg font-bold text-gray-800 mb-3">Introduction Video</h3>
+        <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <video 
+            className="w-full aspect-video"
+            controls
+            poster=""
+            playsInline
+          >
+            <source src="/tutorial.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="p-3">
+            <p className="text-sm text-gray-600">Watch this video to get started with VeroLearn</p>
+          </div>
+        </div>
+      </div>
+
       {/* Welcome Card with Progress Ring */}
       <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl p-5 text-white shadow-lg">
         <div className="flex items-center justify-between">
