@@ -20,8 +20,15 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setIsLoading(true)
     setError('')
+    
+    // Validate fields
+    if (!email.trim() || !password.trim()) {
+      setError('Please enter both email and password')
+      return
+    }
+    
+    setIsLoading(true)
     
     try {
       const { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword } = window.firebaseAuth
@@ -32,7 +39,19 @@ function Login() {
       }
       navigate('/')
     } catch (err) {
-      setError(err.message.replace('Firebase: ', '').replace(/\(auth\/.*\)/, ''))
+      // User-friendly error messages
+      const errorCode = err.code || ''
+      if (errorCode.includes('user-not-found') || errorCode.includes('wrong-password') || errorCode.includes('invalid-credential')) {
+        setError('Wrong email or password')
+      } else if (errorCode.includes('email-already-in-use')) {
+        setError('This email is already registered')
+      } else if (errorCode.includes('weak-password')) {
+        setError('Password should be at least 6 characters')
+      } else if (errorCode.includes('invalid-email')) {
+        setError('Please enter a valid email address')
+      } else {
+        setError('Something went wrong. Please try again.')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -99,6 +118,7 @@ function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
+              required
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
@@ -112,6 +132,8 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
+              required
+              minLength={6}
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
