@@ -5,17 +5,9 @@ function CodePlayground() {
   const navigate = useNavigate()
   const iframeRef = useRef(null)
   const [activeTab, setActiveTab] = useState('html')
-  const [html, setHtml] = useState(`<!DOCTYPE html>
-<html>
-<head>
-  <title>My Page</title>
-</head>
-<body>
-  <h1>Hello World!</h1>
-  <p>Edit this code and tap "Run" to see results.</p>
-  <button onclick="sayHello()">Click Me</button>
-</body>
-</html>`)
+  const [html, setHtml] = useState(`<h1>Hello World!</h1>
+<p>Edit this code and tap "Run" to see results.</p>
+<button onclick="sayHello()">Click Me</button>`)
   const [css, setCss] = useState(`body {
   font-family: Arial, sans-serif;
   padding: 20px;
@@ -52,31 +44,38 @@ console.log('JavaScript is running!');`)
   const runCode = () => {
     setConsoleOutput([])
     
-    const fullCode = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>${css}</style>
-      </head>
-      <body>
-        ${html.replace(/<!DOCTYPE html>|<html>|<\/html>|<head>.*?<\/head>/gs, '')}
-        <script>
-          // Override console.log to capture output
-          const originalLog = console.log;
-          console.log = function(...args) {
-            window.parent.postMessage({ type: 'console', data: args.map(a => String(a)).join(' ') }, '*');
-            originalLog.apply(console, args);
-          };
-          
-          try {
-            ${js}
-          } catch(e) {
-            window.parent.postMessage({ type: 'error', data: e.message }, '*');
-          }
-        </script>
-      </body>
-      </html>
-    `
+    // Extract body content from user's HTML
+    let bodyContent = html
+    // Remove doctype, html, head tags, and extract body content
+    bodyContent = bodyContent.replace(/<!DOCTYPE[^>]*>/gi, '')
+    bodyContent = bodyContent.replace(/<html[^>]*>|<\/html>/gi, '')
+    bodyContent = bodyContent.replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '')
+    bodyContent = bodyContent.replace(/<body[^>]*>|<\/body>/gi, '')
+    
+    const fullCode = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>${css}</style>
+</head>
+<body>
+  ${bodyContent}
+  <script>
+    // Override console.log to capture output
+    const originalLog = console.log;
+    console.log = function(...args) {
+      window.parent.postMessage({ type: 'console', data: args.map(a => String(a)).join(' ') }, '*');
+      originalLog.apply(console, args);
+    };
+    
+    try {
+      ${js}
+    } catch(e) {
+      window.parent.postMessage({ type: 'error', data: e.message }, '*');
+    }
+  </script>
+</body>
+</html>`
     setOutput(fullCode)
   }
 
