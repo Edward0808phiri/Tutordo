@@ -1,17 +1,25 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 function Profile() {
   const navigate = useNavigate()
-  const [user] = useState({
-    name: 'Alex Johnson',
-    email: 'alex.johnson@email.com',
-    avatar: '👤',
+  const { user: authUser, logout } = useAuth()
+
+  const user = {
+    name: authUser?.displayName || 'Learner',
+    email: authUser?.email || 'Not signed in',
+    avatar: authUser?.photoURL ? null : '👤',
+    photoURL: authUser?.photoURL,
     streak: 7,
     totalHours: 24,
     coursesCompleted: 3,
     achievements: 12,
-  })
+  }
+
+  const handleSignOut = async () => {
+    await logout()
+    navigate('/login')
+  }
 
   const menuItems = [
     { icon: '📊', label: 'Learning Statistics', badge: null },
@@ -27,8 +35,12 @@ function Profile() {
       {/* Profile Header */}
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
         <div className="flex items-center space-x-4">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-4xl">
-            {user.avatar}
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-4xl overflow-hidden">
+            {user.photoURL ? (
+              <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              user.avatar
+            )}
           </div>
           <div className="flex-1">
             <h2 className="text-xl font-bold text-gray-800">{user.name}</h2>
@@ -95,7 +107,7 @@ function Profile() {
 
       {/* Sign Out Button */}
       <button 
-        onClick={() => navigate('/login')}
+        onClick={handleSignOut}
         className="w-full py-3 bg-red-50 text-red-600 rounded-xl font-semibold border border-red-100 active:bg-red-100 transition-colors"
       >
         Sign Out
