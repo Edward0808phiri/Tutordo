@@ -1,9 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 function CodePlayground() {
   const navigate = useNavigate()
-  const iframeRef = useRef(null)
   const [activeTab, setActiveTab] = useState('html')
   const [html, setHtml] = useState(`<h1>Hello World!</h1>
 <p>Edit this code and tap "Run" to see results.</p>
@@ -37,7 +36,7 @@ button:hover {
 
 console.log('JavaScript is running!');`)
   
-  const [output, setOutput] = useState('')
+  const [srcDoc, setSrcDoc] = useState('')
   const [consoleOutput, setConsoleOutput] = useState([])
   const [showConsole, setShowConsole] = useState(false)
 
@@ -73,10 +72,10 @@ console.log('JavaScript is running!');`)
     } catch(e) {
       window.parent.postMessage({ type: 'error', data: e.message }, '*');
     }
-  </script>
+  <\/script>
 </body>
 </html>`
-    setOutput(fullCode)
+    setSrcDoc(fullCode)
   }
 
   useEffect(() => {
@@ -91,17 +90,6 @@ console.log('JavaScript is running!');`)
     window.addEventListener('message', handleMessage)
     return () => window.removeEventListener('message', handleMessage)
   }, [])
-
-  useEffect(() => {
-    if (iframeRef.current && output) {
-      const doc = iframeRef.current.contentDocument
-      if (doc) {
-        doc.open()
-        doc.write(output)
-        doc.close()
-      }
-    }
-  }, [output, showConsole])
 
   const tabs = [
     { id: 'html', label: 'HTML', icon: '📄' },
@@ -205,10 +193,10 @@ console.log('JavaScript is running!');`)
           </div>
         ) : (
           <iframe
-            ref={iframeRef}
+            srcDoc={srcDoc}
             title="output"
             className="w-full h-[calc(100%-40px)] bg-white"
-            sandbox="allow-scripts"
+            sandbox="allow-scripts allow-modals"
           />
         )}
       </div>
