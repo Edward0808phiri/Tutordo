@@ -12,6 +12,16 @@ function Courses() {
       
       const mockCourses = [
         {
+          id: 'html-guide',
+          title: 'Comprehensive Guide to HTML',
+          lessons: 10,
+          duration: '1h 30min',
+          progress: 0,
+          image: '🌐',
+          color: 'from-orange-500 to-red-500',
+          clickable: true,
+        },
+        {
           id: 'javascript-intro',
           title: 'JavaScript Introduction',
           lessons: 4,
