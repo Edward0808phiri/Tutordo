@@ -8,6 +8,7 @@ import CourseDetail from './pages/CourseDetail'
 import Profile from './pages/Profile'
 import CodePlayground from './pages/CodePlayground'
 import Login from './pages/Login'
+import Ai from './pages/Ai'
 
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
             <Route path="courses/:courseId" element={<CourseDetail />} />
             <Route path="profile" element={<Profile />} />
             <Route path="playground" element={<CodePlayground />} />
+            <Route path="ai" element={<Ai />} />
+
           </Route>
         </Routes>
       </HashRouter>
